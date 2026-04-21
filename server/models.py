@@ -1,6 +1,8 @@
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Float, DateTime
+from datetime import datetime
 from server.database import Base
 
+# teachers table
 class Teacher(Base):
     __tablename__ = "teachers"
 
@@ -9,6 +11,7 @@ class Teacher(Base):
     last_name = Column(String, nullable=False)
     class_name = Column(String, nullable=False)
 
+# students table
 class Student(Base):
     __tablename__ = "students"
 
@@ -17,16 +20,12 @@ class Student(Base):
     last_name = Column(String, nullable=False)
     class_name = Column(String, nullable=False)
 
+# locations table
 class Location(Base):
     __tablename__ = "locations"
 
     id = Column(String, primary_key=True)
-    time = Column(String, primary_key=True)
-
-    longitude_degrees = Column(String)
-    longitude_minutes = Column(String)
-    longitude_seconds = Column(String)
-
-    latitude_degrees = Column(String)
-    latitude_minutes = Column(String)
-    latitude_seconds = Column(String)
+    time = Column(DateTime, primary_key=True)
+    longitude = Column(Float, nullable=False)
+    latitude = Column(Float, nullable=False)
+    
