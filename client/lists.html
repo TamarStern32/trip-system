@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html>
+
+
+
+<!--  Settings and page information  -->
+<head>
+    <title>Lists</title>
+    <link rel="stylesheet" href="/client/style.css">
+</head>
+
+
+
+<body>
+
+<div class="page-overlay">
+
+    <div class="top-bar">
+
+        <div class="site-title">
+            TripTrack
+        </div>
+
+       <div class="navigation-links">
+             <a href="/home">Home</a>
+             <a class="active" href="/client/lists.html">Lists</a>
+             <a href="/client/teacher.html">Teacher</a>
+             <a href="/client/map.html">Map</a>
+       </div>
+
+    </div>
+
+    <!--  Main content of the page  -->
+    <div class="lists-page">
+
+    <div class="list-card">
+
+        <h2>Students</h2>
+        <input id="searchStudent" class="login-input" placeholder="Enter ID or Name">
+        <button id="resetStudentBtn" class="hero-button secondary-btn">Show All</button>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Class</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentsTableBody">
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+
+    <div class="list-card">
+
+        <h2>Teachers</h2>
+        <input id="searchTeacher" class="login-input" placeholder="Enter ID or Name">
+        <button id="resetTeacherBtn" class="hero-button secondary-btn">Show All</button>
+
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Class</th>
+                    </tr>
+                </thead>
+
+                <tbody id="teachersTableBody">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+ 
+
+</div>
+
+<script src="/client/script.js?v=1.0.1"></script>
+</body>
+
+</html>

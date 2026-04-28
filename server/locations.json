@@ -1,0 +1,66 @@
+[
+  {
+    "ID": "111111111",
+    "Coordinates": {
+      "Longitude": {
+        "Degrees": "35",
+        "Minutes": "13",
+        "Seconds": "20"
+      },
+      "Latitude": {
+        "Degrees": "31",
+        "Minutes": "45",
+        "Seconds": "50"
+      }
+    },
+    "Time": "2026-04-27T10:00:00Z"
+  },
+  {
+    "ID": "333333333",
+    "Coordinates": {
+      "Longitude": {
+        "Degrees": "35",
+        "Minutes": "13",
+        "Seconds": "45"
+      },
+      "Latitude": {
+        "Degrees": "31",
+        "Minutes": "46",
+        "Seconds": "6"
+      }
+    },
+    "Time": "2026-04-27T10:02:00Z"
+  },
+  {
+    "ID": "222222222",
+    "Coordinates": {
+      "Longitude": {
+        "Degrees": "35",
+        "Minutes": "14",
+        "Seconds": "2"
+      },
+      "Latitude": {
+        "Degrees": "31",
+        "Minutes": "46",
+        "Seconds": "20"
+      }
+    },
+    "Time": "2026-04-27T10:05:00Z"
+  },
+  {
+    "ID": "444444444",
+    "Coordinates": {
+      "Longitude": {
+        "Degrees": "34",
+        "Minutes": "58",
+        "Seconds": "0"
+      },
+      "Latitude": {
+        "Degrees": "31",
+        "Minutes": "56",
+        "Seconds": "30"
+      }
+    },
+    "Time": "2026-04-27T10:08:00Z"
+  }
+]

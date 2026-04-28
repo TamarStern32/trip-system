@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+
+<!--  Settings and page information  -->
+<head>
+    <title>TripTrack</title>
+    <link rel="stylesheet" href="/client/style.css">
+</head>
+
+
+<body>
+
+<div class="page-overlay">
+
+     <!--  Top navigation bar  -->
+    <div class="top-bar">
+
+        <div class="site-title">
+            TripTrack
+        </div>
+
+        <!--  Multi-page architecture  -->
+        <div  id="topNavigation" class="navigation-links">
+             <a class="active" href="/home">Home</a>
+             <a href="/client/lists.html">Lists</a>
+             <a href="/client/teacher.html">Teacher</a>
+             <a href="/client/map.html">Map</a>
+       </div>
+
+    </div>
+
+
+    <!--  Main content of the page  -->
+    <div class="hero">
+
+        <div class="hero-login">
+
+            <h1>WELCOME</h1>
+            <p>To TripTrack</p>
+
+            <div class="hero-divider">
+                <span class="line"></span>
+            </div>
+
+            <div class="hero-subtext">
+                Track group trips easily and efficiently
+            </div>
+
+            <input id="loginId" class="login-input" placeholder="enter ID">
+
+            <button id="loginBtn" class="hero-button">
+                log in </button>
+
+            <div id="loginMessage" class="message"></div>
+
+        </div>
+        
+<div class="hero-register" id="hero-register">
+
+    <div class="register-tabs">
+        <button id="showStudentForm" class="hero-button">Register Student</button>
+        <button id="showTeacherForm" class="hero-button">Register Teacher</button>
+    </div>
+
+    <div class="register-card">
+
+        <h2 id="registerTitle">New Teacher</h2>
+
+        <label>ID:</label>
+        <input id="registerId">
+
+        <label>First name:</label>
+        <input id="registerFirstName">
+
+        <label>Last name:</label>
+        <input id="registerLastName">
+
+        <label>Class:</label>
+        <input id="registerClass">
+
+        <button id="registerBtn">Register</button>
+
+        <p id="registerMessage" class="message"></p>
+
+    </div>
+
+</div>
+
+
+    </div>
+
+</div>
+
+<!--  js source with versioning  -->
+<script src="/client/script.js?v=1.0.1"></script>
+</body>
+
+</html>

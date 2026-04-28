@@ -9,7 +9,7 @@ class Teacher(Base):
     id = Column(String, primary_key=True, index=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
-    class_name = Column(String, nullable=False)
+    class_name = Column(String, nullable=True)
 
 # students table
 class Student(Base):
@@ -18,7 +18,7 @@ class Student(Base):
     id = Column(String, primary_key=True, index=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
-    class_name = Column(String, nullable=False)
+    class_name = Column(String, nullable=True)
 
 # locations table
 class Location(Base):
