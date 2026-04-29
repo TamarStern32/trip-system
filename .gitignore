@@ -3,9 +3,14 @@ __pycache__/
 *.pyc
 .venv/
 env/
+.pytest_cache/
 
 # Database
 *.db
+
+# Environment Secrets
+.env
+.env.*
 
 # Node / React
 node_modules/
@@ -15,6 +20,7 @@ build/
 # VS Code
 .vscode/
 
-# OS
+# OS / Logs
 .DS_Store
 Thumbs.db
+*.log
