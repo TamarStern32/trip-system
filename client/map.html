@@ -1,70 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html>
-
-<head>
+  <head>
     <title>Map</title>
-    <link rel="stylesheet" href="/client/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-</head>
+    <link rel="stylesheet" href="/client/style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
 
+  <body>
+    <div class="page-overlay">
+      <div class="top-bar">
+        <div class="site-title">TripTrack</div>
 
-
-<body>
-
-<div class="page-overlay">
-
-    <div class="top-bar">
-
-        <div class="site-title">
-            TripTrack
+        <div class="navigation-links">
+          <a href="/home">Home</a>
+          <a href="/client/lists.html">Lists</a>
+          <a href="/client/teacher.html">Teacher</a>
+          <a class="active" href="/client/map.html">Map</a>
         </div>
+      </div>
 
-       <div class="navigation-links">
-             <a href="/home">Home</a>
-             <a href="/client/lists.html">Lists</a>
-             <a href="/client/teacher.html">Teacher</a>
-             <a class="active" href="/client/map.html">Map</a>
-       </div>
+      <!--  Main content of the page  -->
+      <div class="map-page">
+        <div id="map"></div>
 
-    </div>
+        <div class="far-students-card">
+          <h2>Students too far away</h2>
 
-    <!--  Main content of the page  -->
-<div class="map-page">
-
-    <div id="map"></div>
-    
-    <div class="far-students-card">
-
-        <h2>Students too far away</h2>
-
-        <div class="table-wrapper">
-
+          <div class="table-wrapper">
             <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Distance</th>
-                    </tr>
-                </thead>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Distance</th>
+                </tr>
+              </thead>
 
-                <tbody id="farStudentsTableBody"> </tbody>
-
+              <tbody id="farStudentsTableBody"></tbody>
             </table>
+          </div>
         </div>
-
+      </div>
     </div>
 
-</div>
-</div>
-
-
- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="/client/script.js?v=1.0.1"></script>
-
-</body>
-
-
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="/client/script.js?v=1.0.1"></script>
+  </body>
 </html>

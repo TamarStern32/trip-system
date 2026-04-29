@@ -9,23 +9,14 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import json
 
-# create tables in the database
+# create tables in the database if they do not exist
 Base.metadata.create_all(bind=engine)
 
-# app instance
+# create FastAPI application instance
 app = FastAPI()
 
 # Everything in the "client" folder will be available at the "/client" address.
 app.mount("/client", StaticFiles(directory="client"), name="client")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 # conection to the database
 def get_db():
@@ -99,15 +90,10 @@ def get_latest_location_by_id(person_id: str, db: Session):
 
 ############################################### Endpoints Functions ################################################
  
-@app.get("/home")
-def serve_home():
-    return FileResponse("client/index.html")
-
-
 # check if the API is working
 @app.get("/")
 def read_root():
-    return {"message": "API is working"}
+    return FileResponse("client/index.html")
 
 
 # add a student to the database
@@ -120,7 +106,6 @@ def create_student(student: dict, db: Session = Depends(get_db)):
     # validate that the student has a class name
     if "class_name" not in student or not student["class_name"]:
         raise HTTPException(status_code=400, detail="Class name is required")
-
 
     # check if student with the same ID already exists
     existing_student = db.query(Student).filter(Student.id == student["id"]).first()

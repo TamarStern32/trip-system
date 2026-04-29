@@ -327,7 +327,6 @@ async function loadTeacherPage() {
 
 loadTeacherPage()
 
-
 /////////////////// Student Page //////////////////////////////////////////////////////////////////
 
 const studentIdElement = document.getElementById("studentId")
@@ -350,7 +349,6 @@ if (studentIdElement) {
                 `Class: ${student.class_name}`
         })
 }
-
 
 /////////////////// Map page ////////////////////////////////////////////////////////////////////////////////////
 

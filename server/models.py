@@ -1,5 +1,4 @@
 from sqlalchemy import Column, String, ForeignKey, Float, DateTime
-from datetime import datetime
 from server.database import Base
 
 # teachers table
