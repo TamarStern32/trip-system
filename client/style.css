@@ -117,15 +117,6 @@ body {
 
 /******** register page *********************************************************************/
 
-/*
-
-.register-page {
-    text-align: center;
-    padding-top: 0px;
-}
-
-*/
-
 .hero-register {
   flex: 1;
   text-align: center;
@@ -136,17 +127,6 @@ body {
 .register-tabs {
   margin-bottom: 20px;
 }
-
-/*
-.register-tabs button {
-    background: #d9b566;
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 16px;
-}
-    */
 
 .register-card {
   width: 300px;
@@ -185,7 +165,7 @@ body {
   border-radius: 20px;
   font-size: 16px;
 }
-
+  
 .message {
   margin-top: 10px;
   min-height: 10px;

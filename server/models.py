@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Float, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
 from server.database import Base
 
 # teachers table
@@ -23,8 +23,8 @@ class Student(Base):
 class Location(Base):
     __tablename__ = "locations"
 
-    id = Column(String, primary_key=True)
-    time = Column(DateTime, primary_key=True)
+    location_id = Column(Integer, primary_key=True, autoincrement=True) 
+    id = Column(String, primary_key=False)
+    time = Column(DateTime, primary_key=False)
     longitude = Column(Float, nullable=False)
     latitude = Column(Float, nullable=False)
-    

@@ -1,14 +1,19 @@
 const BASE_URL = "http://127.0.0.1:8000"
 
 /////////////////// Index Page - Log in //////////////////////////////////////////////////////////////////
+ 
+const topNavigation = document.getElementById("topNavigation")
 
-const loginBtn = document.getElementById("loginBtn")
-
+const loginBtn = document.getElementById("loginBtn")   
 if (loginBtn) {
 
     loginBtn.addEventListener("click", async () => {
+
         const id = document.getElementById("loginId").value
         const login_message = document.getElementById("loginMessage")
+        const register_message = document.getElementById("registerMessage")
+        register_message.textContent = ""
+        login_message.textContent = ""
 
         // first, check if the ID belongs to a teacher, if not we check if it belongs to a student
         const teacherResponse = await fetch(`${BASE_URL}/teachers/${id}`)
@@ -16,7 +21,9 @@ if (loginBtn) {
             localStorage.setItem("userType", "teacher")
             localStorage.setItem("userId", id)
             login_message.textContent = "Welcome teacher!\nThe top navigation menu is now available"
-            document.getElementById("topNavigation").style.display = "flex"
+
+            topNavigation.style.display = "flex"
+            document.querySelector(".hero-register").style.visibility = "hidden"
             return
         }
 
@@ -29,10 +36,10 @@ if (loginBtn) {
             return
         }
 
-
         // if not found in both, offer to register
         login_message.textContent = "ID not found. Please register"
-        
+        topNavigation.style.display = "none"
+
         // show the registration form
         const hero_register = document.querySelector(".hero-register")
         hero_register.style.visibility = "visible"
@@ -42,17 +49,11 @@ if (loginBtn) {
     })
 }
 
-
-
 /////////////////// Teacher & Student Registration //////////////////////////////////////////////////////////////////
 
-let registerType = "student" // default to teacher, can be switched to student 
+let registerType = "student" // default to student, can be switched to teacher 
 
-// connect HTML to JS logic
 const showStudentForm = document.getElementById("showStudentForm")
-const showTeacherForm = document.getElementById("showTeacherForm")
-const registerBtn = document.getElementById("registerBtn")
-
 if (showStudentForm) { // check if element exists - in some pages it doesn't, so we avoid errors
     showStudentForm.addEventListener("click", () => {
         registerType = "student" // set type to student when button is clicked
@@ -61,6 +62,7 @@ if (showStudentForm) { // check if element exists - in some pages it doesn't, so
     })
 }
 
+const showTeacherForm = document.getElementById("showTeacherForm")
 if (showTeacherForm) {
     showTeacherForm.addEventListener("click", () => {
         registerType = "teacher" // set type to teacher when button is clicked
@@ -69,12 +71,13 @@ if (showTeacherForm) {
     })
 }
 
+const registerBtn = document.getElementById("registerBtn")
 if (registerBtn) {
     registerBtn.addEventListener("click", async () => {
         
         const register_message = document.getElementById("registerMessage")
         const login_message = document.getElementById("loginMessage")
-        login_message.textContent = "";
+        login_message.textContent = ""
 
         const person = {
             id: document.getElementById("registerId").value,
@@ -84,12 +87,12 @@ if (registerBtn) {
         }
 
         if (!person.id ||  !person.class_name) {
-            register_message.textContent = "ID and class name are required";
-            return; 
+            register_message.textContent = "ID and class name are required"
+            return
         }
         if (person.id.length !== 9) {
             register_message.textContent = "ID must be 9 digits"
-            return;
+            return
         }
 
         const endpoint = registerType === "teacher" ? "teachers" : "students"
@@ -100,9 +103,7 @@ if (registerBtn) {
             // await is used to wait for the response before continuing
             const response = await fetch(`${BASE_URL}/${endpoint}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(person)
             })
 
@@ -112,6 +113,7 @@ if (registerBtn) {
             if (!response.ok) { // ok is boolean 
                 register_message.className = "message error-message"
                 register_message.textContent = data.detail || "Failed to register"
+                login_message.textContent = ""
                 return
             }
 
@@ -129,9 +131,8 @@ if (registerBtn) {
                localStorage.setItem("userType", "teacher")
                localStorage.setItem("userId", person.id)
                register_message.textContent = "Welcome teacher!\nThe top navigation menu is now available"
-               document.getElementById("topNavigation").style.display = "flex"
+               topNavigation.style.display = "flex"
            }
-
 
         } 
         catch (error) { // network or other unexpected error
@@ -150,9 +151,9 @@ let allTeachers = []
 
 // Helper function to render table rows based on provided data
 function renderTable(data, tableBody) {
-    if (!tableBody) return;
-    tableBody.innerHTML = ""
-    data.forEach(person => {
+    if (!tableBody) return     // check if element exists
+    tableBody.innerHTML = ""   // clear existing rows before rendering new ones
+    data.forEach(person => {   // person can be either a student or a teacher, since they have the same properties
         tableBody.innerHTML += `
             <tr>
                 <td>${person.id}</td>
@@ -173,7 +174,7 @@ async function loadLists() {
     {
         // security check - only teachers can access the lists page, if a student tries to access it, they will be redirected to the home page
         if (localStorage.getItem("userType") !== "teacher") {
-        return; 
+        return
         }
 
         // default method is GET, so we don't need to specify the method 
@@ -190,7 +191,7 @@ async function loadLists() {
     } 
     catch (error) 
     {
-        // in case of error, show message in the tables instead of the data
+        // in case of error, show message in the tables (span of all 4 columns) instead of the data
         studentsTableBody.innerHTML = `
             <tr>
                 <td colspan="4">Failed to load students</td>
@@ -205,41 +206,43 @@ async function loadLists() {
     }
 }
 
-// Search logic for Students - filters by ID or Name
+/////// filter lists by search term ///////
+
+// General filter function that can be used for both students and teachers, based on the provided search term, original data list, and table body to render the results. 
+function searchInList(term, dataList, tableBody) { 
+    if (!tableBody) return // check if element exists
+
+    const lowerTerm = term.toLowerCase()
+    const filtered = dataList.filter(item => 
+        item.id.toString().startsWith(lowerTerm) || 
+        (item.first_name || "").toLowerCase().startsWith(lowerTerm) || 
+        (item.last_name || "").toLowerCase().startsWith(lowerTerm)
+    )
+    renderTable(filtered, tableBody)
+}
+
+// event listeners for search inputs, using the general filter function
 const searchStudent = document.getElementById("searchStudent")
-if (searchStudent) { // check if element exists - in some pages it doesn't, so we avoid errors
-    searchStudent.addEventListener("input", (e) => { // listen if the input value changes, even by one char
-        const term = e.target.value.toLowerCase() // convert to lower case in case of names starting with capital letters, to make the search case-insensitive
-        const filtered = allStudents.filter(s => 
-              s.id.toString().startsWith(term) || 
-              (s.first_name || "").toLowerCase().startsWith(term) || 
-              (s.last_name || "").toLowerCase().startsWith(term)
-     )
-        renderTable(filtered, studentsTableBody)
+if (searchStudent) {
+    searchStudent.addEventListener("input", (e) => {
+        searchInList(e.target.value, allStudents, studentsTableBody)
     })
 }
 
-// Reset button for Students - shows the full list again[cite: 6]
-const resetStudentBtn = document.getElementById("resetStudentBtn")
-if (resetStudentBtn) {
-    resetStudentBtn.addEventListener("click", () => {
-        if (searchStudent) 
-            searchStudent.value = "" // Clear input field
-        renderTable(allStudents, studentsTableBody) // Restore original list
-    })
-}
-
-// Search logic for Teachers - filters by ID or Name
+// we can reuse the same function for teachers, just with different data and table body
 const searchTeacher = document.getElementById("searchTeacher")
 if (searchTeacher) {
     searchTeacher.addEventListener("input", (e) => {
-        const term = e.target.value.toLowerCase()
-        const filtered = allTeachers.filter(t => 
-             t.id.toString().startsWith(term) || 
-             (t.first_name || "").toLowerCase().startsWith(term) || 
-             (t.last_name || "").toLowerCase().startsWith(term)
-        )
-        renderTable(filtered, teachersTableBody)
+        searchInList(e.target.value, allTeachers, teachersTableBody)
+    })
+}
+
+// Reset button for Students - shows the full list again
+const resetStudentBtn = document.getElementById("resetStudentBtn")
+if (resetStudentBtn) {
+    resetStudentBtn.addEventListener("click", () => {
+        if (searchStudent) searchStudent.value = "" // Clear input field by setting it to empty string
+        searchInList("", allStudents, studentsTableBody)
     })
 }
 
@@ -247,14 +250,12 @@ if (searchTeacher) {
 const resetTeacherBtn = document.getElementById("resetTeacherBtn")
 if (resetTeacherBtn) {
     resetTeacherBtn.addEventListener("click", () => {
-        if (searchTeacher)
-            searchTeacher.value = "" // Clear input field
-        renderTable(allTeachers, teachersTableBody) // Restore original list
+        if (searchTeacher) searchTeacher.value = ""
+        searchInList("", allTeachers, teachersTableBody)
     })
 }
 
 loadLists()
-
 
 /////////////////// Teacher page ////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,9 +279,9 @@ async function loadTeacherPage() {
     {
         // security check - only teachers can access the teacher page, if a student tries to access it, they will be redirected to the home page
         if (localStorage.getItem("userType") !== "teacher") {
-            alert("Access restricted: This page is for teachers only.");
-            window.location.href = "/home";
-            return;
+            alert("Access restricted: This page is for teachers only.")
+            window.location.href = "/home"
+            return
         }
         const teacherResponse = await fetch(`${BASE_URL}/teachers/${teacherId}`)
         const teacher = await teacherResponse.json() //convert the answer from JSON to JS
@@ -307,16 +308,8 @@ async function loadTeacherPage() {
             return
         }
 
-        students.forEach(student => {
-            teacherStudentsTableBody.innerHTML += `
-                <tr>
-                    <td>${student.id}</td>
-                    <td>${student.first_name || ""}</td>
-                    <td>${student.last_name || ""}</td>
-                    <td>${student.class_name || ""}</td>
-                </tr>
-            `
-        })
+        // render the students in the table using the helper function
+        renderTable(students, teacherStudentsTableBody)
     } 
     catch (error)
     {
@@ -353,30 +346,30 @@ if (studentIdElement) {
 /////////////////// Map page ////////////////////////////////////////////////////////////////////////////////////
 
 const mapElement = document.getElementById("map")
-
 if (mapElement) {
 
-    const map = L.map("map").setView([31.7683, 35.2137], 15)
+    const map = L.map("map").setView([31.7819, 35.2208], 13)
 
+    // using OpenStreetMap tiles, which are free and don't require an API key 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map)
 
     // add a layer group above the map to hold the student markers, so we can easily clear them when refreshing the data
-    const studentsLayerGroup = L.layerGroup().addTo(map);
+    const studentsLayerGroup = L.layerGroup().addTo(map)
 
     async function loadLocations() {
 
     // security check - only teachers can access the map page, if a student tries to access it, they will be redirected to the home page
     if (localStorage.getItem("userType") !== "teacher") {
-        alert("Access restricted: This page is for teachers only.");
-        window.location.href = "/home";
-        return;
+        alert("Access restricted: This page is for teachers only.")
+        window.location.href = "/home"
+        return
     }
         const response = await fetch(`${BASE_URL}/locations`)
         const locations = await response.json()   // convert JASON to JS array
 
-        studentsLayerGroup.clearLayers(); // clear existing markers before adding new ones
+        studentsLayerGroup.clearLayers() // clear existing markers before adding new ones
 
         locations.forEach(location => 
         {
@@ -385,22 +378,25 @@ if (mapElement) {
                 .bindTooltip(location.id, { permanent: true, direction: "top"})
         })
     }
-
     loadLocations()
-    setInterval(loadLocations, 60000); // refresh every 60 seconds
+    setInterval(loadLocations, 60000) // refresh every 60 seconds
 }
 
 /////// Students too far away ///////
 
-const farStudentsTableBody = document.getElementById("farStudentsTableBody")
-
 async function loadFarStudents() {
 
-    if (!farStudentsTableBody) {
+    const farStudentsTableBody = document.getElementById("farStudentsTableBody")
+    const teacherId = localStorage.getItem("userId")
+
+    if (!teacherId) { // if for some reason we don't have the teacher ID in local storage, we can't load the far students, so we log an error and stop
+        console.error("No teacher ID found for far students check")
         return
     }
 
-    const teacherId = localStorage.getItem("userId")
+    if (!farStudentsTableBody) { // if we are not in the far-students.html page, stops
+        return
+    }
 
     try {
         const response = await fetch( `${BASE_URL}/teachers/${teacherId}/far-students?max_distance_km=3`)
@@ -412,8 +408,9 @@ async function loadFarStudents() {
 
         farStudentsTableBody.innerHTML = ""
 
+        // the helper function for rendering the table is not suitable here 
+        // because we have a different data structure and an additional column for distance
         farStudents.forEach(student => {
-
             farStudentsTableBody.innerHTML += `
                 <tr>
                     <td>${student.id}</td>
@@ -430,4 +427,4 @@ async function loadFarStudents() {
     }
 }
 loadFarStudents()
-setInterval(loadFarStudents, 60000); // refresh every 60 seconds
+setInterval(loadFarStudents, 60000) // refresh every 60 seconds

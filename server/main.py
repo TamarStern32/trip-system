@@ -85,7 +85,7 @@ def get_latest_location_by_id(person_id: str, db: Session):
         db.query(Location)
         .filter(Location.id == person_id)
         .order_by(Location.time.desc())
-        .first()
+        .first()  # even if there are multiple same locations- return only one 
     )
 
 ############################################### Endpoints Functions ################################################
@@ -107,6 +107,16 @@ def create_student(student: dict, db: Session = Depends(get_db)):
     if "class_name" not in student or not student["class_name"]:
         raise HTTPException(status_code=400, detail="Class name is required")
 
+    # check if teacher with the same ID already exists (to prevent ID conflicts between teachers and students)
+    existing_teacher = db.query(Teacher).filter(Teacher.id == student["id"]).first()
+    if existing_teacher:
+        raise HTTPException(status_code=400, detail="ID already exists")
+    
+    # check if the class name of the student  exists in the teachers table 
+    existing_class = db.query(Teacher).filter(Teacher.class_name == student["class_name"]).first()
+    if not existing_class:
+        raise HTTPException(status_code=400, detail=f"Class '{student['class_name']}' does not exist")
+    
     # check if student with the same ID already exists
     existing_student = db.query(Student).filter(Student.id == student["id"]).first()
     if existing_student:
@@ -155,6 +165,11 @@ def create_teacher(teacher: dict, db: Session = Depends(get_db)):
     # validate that the teacher has a class name
     if "class_name" not in teacher or not teacher["class_name"]:
         raise HTTPException(status_code=400, detail="Class name is required")
+
+    # check if student with the same ID already exists (to prevent ID conflicts between teachers and students)
+    existing_student = db.query(Student).filter(Student.id == teacher["id"]).first()
+    if existing_student:
+        raise HTTPException(status_code=400, detail="ID already exists")
 
 
     # check if teacher with the same ID already exists
@@ -236,6 +251,7 @@ def create_location(data: dict, db: Session = Depends(get_db)):
         time=parse_time(data["Time"]),
         longitude=longitude,
         latitude=latitude
+        # location_id will be automatically generated
     )
     db.add(new_location)
     db.commit()
@@ -280,6 +296,9 @@ def get_latest_location(person_id: str, db: Session = Depends(get_db)):
 @app.post("/locations/load-from-file")
 def load_locations_from_file(db: Session = Depends(get_db)):
 
+    # delete all existing locations before loading new ones from the file
+    db.query(Location).delete() 
+    
     # open the json file for reading. with- automatically closes the file after the block is executed
     with open("server/locations.json", "r") as file:
         # load- read the JSON and convert it into Python data structures (in this case, a list of dictionaries)
@@ -304,15 +323,13 @@ def load_locations_from_file(db: Session = Depends(get_db)):
             time=parse_time(data["Time"]),
             longitude=longitude,
             latitude=latitude
+            # location_id will be automatically generated
         )
-
         db.add(new_location)
         
     # commit the changes to the database after adding all the locations
     db.commit()
-
     return {"message": "locations loaded successfully"}
-
 
 ###############################################  Bonus Functions #################################################
 
@@ -358,5 +375,3 @@ def get_far_students(teacher_id: str, max_distance_km: float, db: Session = Depe
                 })
                 
     return far_students
-
-##################################################################################################################
